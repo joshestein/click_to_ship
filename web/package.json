@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@fsouza/prettierd": "^0.25.3",
+    "vite": "^5.2.12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
