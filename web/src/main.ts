@@ -29,6 +29,8 @@ import bboxes from "./images/bboxes.json";
   const div = document.getElementById("background") as HTMLDivElement;
 
   window.addEventListener("click", (event) => {
+    div.innerText = "";
+
     const image = getClosestImage(
       event.clientX / window.innerWidth,
       event.clientY / window.innerHeight,
