@@ -55,12 +55,6 @@ if __name__ == "__main__":
 
     outfile = data_dir / "bboxes.json"
 
-    # Remove existing bboxes file
-    try:
-        os.remove(outfile)
-    except FileNotFoundError:
-        pass
-
     result_dict = {}
     for i, result in enumerate(results):
         if not result:
