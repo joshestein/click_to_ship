@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -52,7 +53,7 @@ if __name__ == "__main__":
     # Class 8 = 'boat'
     results = model(source=resized_dir, classes=[8], stream=True)
 
-    outfile = data_dir / "bboxes.txt"
+    outfile = data_dir / "bboxes.json"
 
     # Remove existing bboxes file
     try:
@@ -60,12 +61,13 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
 
-    with open(outfile, "a") as f:
-        for i, result in enumerate(results):
-            if not result:
-                continue
+    result_dict = {}
+    for i, result in enumerate(results):
+        if not result:
+            continue
 
-            centers = get_bbox_centers(result.boxes)
-            for center in centers:
-                (x, y) = center
-                f.write(f"{Path(result.path).name}: {x},{y}\n")
+        centers = get_bbox_centers(result.boxes)
+        result_dict[Path(result.path).name] = centers
+
+    with open(outfile, "w", encoding="utf-8") as f:
+        json.dump(result_dict, f, ensure_ascii=False, indent=4)
