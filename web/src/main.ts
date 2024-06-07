@@ -31,11 +31,12 @@ import bboxes from "./images/bboxes.json";
   window.addEventListener("click", (event) => {
     div.innerText = "";
 
+    document.body.style.cursor = "wait";
     const image = getClosestImage(
       event.clientX / window.innerWidth,
       event.clientY / window.innerHeight,
     );
-    console.log(image);
+    document.body.style.cursor = "default";
 
     div.style.backgroundImage = `url(/src/images/resized/${image})`;
   });
