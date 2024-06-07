@@ -64,6 +64,7 @@ if __name__ == "__main__":
     result_dict = {}
     for i, result in enumerate(results):
         if not result:
+            os.remove(result.path)
             continue
 
         centers = get_bbox_centers(result.boxes)
