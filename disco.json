@@ -4,7 +4,7 @@
         "web": {
             "type": "static",
             "command": "npm run build",
-            "publicPath": "/click_to_ship/dist"
+            "publicPath": "/dist"
         }
     }
 }
