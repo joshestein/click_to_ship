@@ -15,7 +15,7 @@ def augment_images(
     output_dir,
     target_width=TARGET_IMAGE_WIDTH,
     target_height=TARGET_IMAGE_HEIGHT,
-):
+) -> None:
     p = Augmentor.Pipeline(source_directory=source_dir, output_directory=output_dir)
     p.flip_left_right(probability=0.5)
     p.rotate(probability=1.0, max_left_rotation=5, max_right_rotation=5)
@@ -38,6 +38,38 @@ def get_bbox_centers(boxes: Boxes):
     return centers
 
 
+def build_image_to_bounding_boxes(
+    augmented_dir: Path,
+) -> dict[str, list[tuple[float, float]]]:
+    """Use YOLO to find the center of each ship/boat within each image.
+
+    :return: A dictionary mapping image names to a list of centers of the bounding boxes.
+    """
+    model = YOLO()
+
+    # Class 8 = 'boat'
+    results = model(source=augmented_dir, classes=[8], stream=True)
+
+    result_dict = {}
+    image_index = 0
+
+    for result in results:
+        if not result:
+            os.remove(result.path)
+            continue
+
+        centers = get_bbox_centers(result.boxes)
+
+        # Change the crazy augmentor output names to 0 based index names
+        image_path = Path(result.path)
+        new_path = image_path.parent / f"{image_index}.jpg"
+        Path.rename(image_path, new_path)
+        result_dict[new_path.name] = centers
+        image_index += 1
+
+    return result_dict
+
+
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
@@ -54,28 +86,7 @@ if __name__ == "__main__":
         os.makedirs(augmented_dir, exist_ok=True)
         augment_images(data_dir, augmented_dir)
 
-    model = YOLO()
-
-    # Class 8 = 'boat'
-    results = model(source=augmented_dir, classes=[8], stream=True)
-
+    image_to_bounding_box_dict = build_image_to_bounding_boxes(augmented_dir)
     outfile = data_dir / "bboxes.json"
-
-    result_dict = {}
-    image_index = 0
-    for i, result in enumerate(results):
-        if not result:
-            os.remove(result.path)
-            continue
-
-        centers = get_bbox_centers(result.boxes)
-
-        # Change the crazy augmentor output names to 0 based index names
-        image_path = Path(result.path)
-        new_path = image_path.parent / f"{image_index}.jpg"
-        Path.rename(image_path, new_path)
-        result_dict[new_path.name] = centers
-        image_index += 1
-
     with open(outfile, "w", encoding="utf-8") as f:
-        json.dump(result_dict, f, ensure_ascii=False, indent=4)
+        json.dump(image_to_bounding_box_dict, f, ensure_ascii=False, indent=4)
