@@ -38,6 +38,6 @@ import bboxes from "./images/bboxes.json";
     );
     document.body.style.cursor = "default";
 
-    div.style.backgroundImage = `url(/src/images/resized/${image})`;
+    div.style.backgroundImage = `url(/src/images/augmented/${image})`;
   });
 })();
