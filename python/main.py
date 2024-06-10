@@ -6,12 +6,15 @@ import Augmentor
 from ultralytics import YOLO
 from ultralytics.engine.results import Boxes
 
-IMAGE_HEIGHT = 1080
-IMAGE_WIDTH = 1920
+TARGET_IMAGE_HEIGHT = 1080
+TARGET_IMAGE_WIDTH = 1920
 
 
 def augment_images(
-    source_dir: Path, output_dir, target_width=IMAGE_WIDTH, target_height=IMAGE_HEIGHT
+    source_dir: Path,
+    output_dir,
+    target_width=TARGET_IMAGE_WIDTH,
+    target_height=TARGET_IMAGE_HEIGHT,
 ):
     p = Augmentor.Pipeline(source_directory=source_dir, output_directory=output_dir)
     p.flip_left_right(probability=0.5)
