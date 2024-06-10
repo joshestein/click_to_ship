@@ -74,7 +74,7 @@ if __name__ == "__main__":
         image_path = Path(result.path)
         new_path = image_path.parent / f"{image_index}.jpg"
         Path.rename(image_path, new_path)
-        result_dict[new_path] = centers
+        result_dict[new_path.name] = centers
         image_index += 1
 
     with open(outfile, "w", encoding="utf-8") as f:
