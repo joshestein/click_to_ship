@@ -1,0 +1,10 @@
+{
+    "version": "1.0",
+    "services": {
+        "web": {
+            "type": "static",
+            "command": "npm run build",
+            "publicPath": "/click_to_ship/dist"
+        }
+    }
+}
