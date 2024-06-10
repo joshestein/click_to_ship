@@ -59,13 +59,20 @@ if __name__ == "__main__":
     outfile = data_dir / "bboxes.json"
 
     result_dict = {}
+    image_index = 0
     for i, result in enumerate(results):
         if not result:
             os.remove(result.path)
             continue
 
         centers = get_bbox_centers(result.boxes)
-        result_dict[Path(result.path).name] = centers
+
+        # Change the crazy augmentor output names to 0 based index names
+        image_path = Path(result.path)
+        new_path = image_path.parent / f"{image_index}.jpg"
+        Path.rename(image_path, new_path)
+        result_dict[new_path] = centers
+        image_index += 1
 
     with open(outfile, "w", encoding="utf-8") as f:
         json.dump(result_dict, f, ensure_ascii=False, indent=4)
