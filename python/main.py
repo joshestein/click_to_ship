@@ -2,7 +2,7 @@ import json
 import os
 from pathlib import Path
 
-from PIL import Image
+import Augmentor
 from ultralytics import YOLO
 from ultralytics.engine.results import Boxes
 
@@ -10,14 +10,16 @@ IMAGE_HEIGHT = 1080
 IMAGE_WIDTH = 1920
 
 
-def resize_images(data_dir: Path, target_width=IMAGE_WIDTH, target_height=IMAGE_HEIGHT):
-    output_dir = data_dir / "resized"
-    os.makedirs(output_dir, exist_ok=True)
-
-    for i, image in enumerate(data_dir.glob("*.jpg")):
-        image = Image.open(image)
-        image = image.resize((target_width, target_height))
-        image.save(output_dir / f"{i}.jpg", quality=95)
+def augment_images(
+    source_dir: Path, output_dir, target_width=IMAGE_WIDTH, target_height=IMAGE_HEIGHT
+):
+    p = Augmentor.Pipeline(source_directory=source_dir, output_directory=output_dir)
+    p.flip_left_right(probability=0.5)
+    p.rotate(probability=1.0, max_left_rotation=5, max_right_rotation=5)
+    p.crop_random(probability=0.5, percentage_area=0.5)
+    p.skew_left_right(probability=0.5, magnitude=0.4)
+    p.resize(probability=1.0, width=target_width, height=target_height)
+    p.sample(1000)
 
 
 def get_bbox_centers(boxes: Boxes):
@@ -44,14 +46,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     data_dir = Path(args.data_dir)
 
-    resized_dir = data_dir / "resized"
-    if not resized_dir.exists():
-        resize_images(data_dir)
+    augmented_dir = data_dir / "augmented"
+    if not augmented_dir.exists():
+        os.makedirs(augmented_dir, exist_ok=True)
+        augment_images(data_dir, augmented_dir)
 
     model = YOLO()
 
     # Class 8 = 'boat'
-    results = model(source=resized_dir, classes=[8], stream=True)
+    results = model(source=augmented_dir, classes=[8], stream=True)
 
     outfile = data_dir / "bboxes.json"
 

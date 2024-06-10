@@ -1,2 +1,3 @@
+Augmentor~=0.2.12
 pillow~=10.3.0
 ultralytics==8.2.28
