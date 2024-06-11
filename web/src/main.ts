@@ -37,6 +37,6 @@ import { Peter } from "./peter";
     );
     document.body.style.cursor = "default";
 
-    div.style.backgroundImage = `url(/images/augmented/${image})`;
+    div.style.backgroundImage = `url(/images/${image})`;
   });
 })();
