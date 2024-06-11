@@ -48,7 +48,7 @@ def build_image_to_bounding_boxes(
     model = YOLO()
 
     # Class 8 = 'boat'
-    results = model(source=augmented_dir, classes=[8], stream=True)
+    results = model(source=augmented_dir, classes=[8], stream=True, conf=0.6)
 
     result_dict = {}
     image_index = 0
