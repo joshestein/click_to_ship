@@ -19,7 +19,7 @@ def augment_images(
     p = Augmentor.Pipeline(source_directory=source_dir, output_directory=output_dir)
     p.flip_left_right(probability=0.5)
     p.rotate(probability=1.0, max_left_rotation=5, max_right_rotation=5)
-    p.crop_random(probability=0.5, percentage_area=0.5)
+    p.crop_random(probability=0.25, percentage_area=0.5)
     p.skew_left_right(probability=0.5, magnitude=0.4)
     p.resize(probability=1.0, width=target_width, height=target_height)
     p.sample(1000)
