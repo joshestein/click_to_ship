@@ -75,13 +75,20 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument(
-        "-d", "--data-dir", help="Data dir containing images", required=True
+        "-d", "--data-dir", help="Data directory containing images", required=True
+    )
+    parser.add_argument(
+        "-s", "--save-dir", help="Directory to save augmented images", required=False
     )
 
     args = parser.parse_args()
     data_dir = Path(args.data_dir)
 
-    augmented_dir = data_dir / "augmented"
+    if not args.save_dir:
+        augmented_dir = data_dir / "augmented"
+    else:
+        augmented_dir = Path(args.save_dir)
+
     if not augmented_dir.exists():
         os.makedirs(augmented_dir, exist_ok=True)
         augment_images(data_dir, augmented_dir)
