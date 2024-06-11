@@ -9,22 +9,20 @@ import { Peter } from "./peter";
     }
   }
 
-  function getClosestImage(x: number, y: number) {
+  function getClosestImage(mouseX: number, mouseY: number) {
     let minDistance = Number.MAX_VALUE;
-    let image = "";
-    for (const mapElement of centerToImageMap) {
-      const imageX = mapElement[0][0];
-      const imageY = mapElement[0][1];
-
+    let closestImage = "";
+    for (const [[bboxCenterX, bboxCenterY], image] of centerToImageMap) {
       // Ignore sqrt for performance
-      const distance = (imageX - x) ** 2 + (imageY - y) ** 2;
+      const distance =
+        (mouseX - bboxCenterX) ** 2 + (mouseY - bboxCenterY) ** 2;
       if (distance < minDistance) {
         minDistance = distance;
-        image = mapElement[1];
+        closestImage = image;
       }
     }
 
-    return image;
+    return closestImage;
   }
 
   const div = document.getElementById("oat-milkers") as Peter;
