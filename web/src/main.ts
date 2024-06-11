@@ -1,4 +1,5 @@
 import bboxes from "./images/bboxes.json";
+import { Peter } from "./peter";
 
 (() => {
   const centerToImageMap = new Map<[number, number], string>();
@@ -26,7 +27,7 @@ import bboxes from "./images/bboxes.json";
     return image;
   }
 
-  const div = document.getElementById("background") as HTMLDivElement;
+  const div = document.getElementById("oat-milkers") as Peter;
 
   window.addEventListener("click", (event) => {
     div.innerText = "";
